@@ -1,0 +1,325 @@
+/*
+	___GENERAL___
+*/
+body{
+	/*font-family: Georgia, Serif;*/
+	font-family: 'Nunito', sans-serif;
+	font-size: 17px;
+}
+
+.form-wrap-login{
+	align-items: center;
+	background-color: #256;	
+}
+
+.reveal{
+	width: 500px;
+	height: 550px;
+	text-align: center;
+	border-color: #000;
+	align-content: center;
+	background-image: url("../img/flying.jpg");
+	background-repeat: no-repeat;
+	border-radius: 6px;
+	margin-top: 55px;
+	padding: 20px;
+	/**background-color: rgba(255,255,255,0.9);**/
+}
+
+.reveal img{
+	width: 120px;
+	height: 120px;
+	margin-top: -60px;
+	margin-bottom: 30px;	
+}
+
+.reveal input{
+	width: 300px;
+	height: 50px;
+	margin-bottom: 20px;
+	font-size: 15px;
+	border-radius: 5px;
+	background-color: white;
+	padding-left: 15px;
+}
+
+.container{
+	width: 500px;
+	height: 480px;
+	text-align: center;
+	align-content: center;
+	border-radius: 6px;
+	margin-top: 150px;
+	margin: 0 auto;
+	padding: 20px;
+	background-color: rgba(0,0,0,0.8);
+}
+
+.container img {
+	width: 120px;
+	height: 120px;
+	margin-top: -60px;
+	margin-bottom: 30px;
+}
+.wrap{
+	width: 90%;
+	margin: 0 auto;
+	max-width: 1100px;
+}
+
+.button{
+	border-radius: 5px;
+}
+
+
+/*
+	___NAV-MOBILE___
+*/
+
+.title-bar{
+	height: 60px;
+	background-color: #222;
+	padding-top: 17px;
+}
+
+.off-canvas-wrapper{
+	background-color: #222;
+}
+
+#mobile-menu{
+	background-color: #222;
+	padding: 10px;
+}
+
+#mobile-menu li{
+	list-style: none;
+}
+
+#mobile-menu a{
+	color: rgba(255,255,255,0.6);
+	font-weight: bold;
+	line-height: 2;
+}
+
+#mobile-menu a:hover{
+	color: rgba(255,255,255,0.9);
+}
+
+.js-off-canvas-exit{
+	background-color: rgba(0,0,0,0.25);
+}
+
+/*
+	___NAV-DESKTOP___
+*/
+.nav-desktop{
+	background-color: #222;
+	height: 80px;
+	padding: 0;
+
+}
+
+.site-logo{
+	color: white;
+	line-height: 80px;	
+}
+
+.site-logo-pic{
+	display: inline-block;
+}
+
+.nav-desktop .menu-desktop{
+	background-color: transparent;
+	line-height: 80px;
+
+}
+
+.nav-desktop .menu-desktop a{
+	display: inline-block;
+	color: white;
+	line-height: 80px;
+	padding-top: 0;
+	padding-bottom: 0;
+
+}
+
+.nav-desktop .menu-desktop a:hover{
+	background-color: rgba(255,255,255, 0.1);
+}
+
+/*
+	___HERO___
+*/
+.hero{
+	background-color: lightblue;
+	padding: 80px 40px;
+	height: 400px;
+	background-image: url("../img/pattern.png");
+}
+
+.hero h1{
+	color: rgba(255,255,255,0.8);
+	
+}
+
+.hero p{
+	color: rgba(255,255,255,0.8);
+	
+}
+
+/*
+	___MAIN___
+*/
+
+.main{
+	padding: 35px 0px;
+}
+.main-login{
+	padding: 55px 0px;
+	background-image: url("../img/flying.jpg");
+	background-size: 100% 720px;
+}
+
+.main-register{
+	padding: 55px 0px;
+	background-image: url("../img/r1.jpg");
+	background-repeat: no-repeat;
+	background-size: 100%;
+}
+
+.main-register p, label{
+	color: #FFF;
+}
+
+.main-register h3{
+	color: #FFF;
+	padding-top: 10px;
+}
+
+.main-register img{
+	width: 120px;
+	height: 120px;
+	margin-top: -60px;
+	margin-bottom: 30px;	
+	align-content: center;
+	text-align: center;
+}
+
+.register-wrapper{
+	text-align: center;
+	height: 60%;
+	width:60%;
+	margin-left: 20%;
+	background-color: rgba(0,0,0,0.8);
+	border-color: #000;
+	border-radius: 8px;
+	padding: 10px;
+}
+
+.main-register input{
+	width: 45%;
+	height: 50px;
+	margin-bottom: 20px;
+	margin-left: 80px;
+	font-size: 15px;
+	border-radius: 5px;
+	background-color: white;
+	padding-left: 15px;
+}
+.main-login input{
+	width: 300px;
+	height: 50px;
+	margin-bottom: 20px;
+	margin-left: 80px;
+	font-size: 15px;
+	border-radius: 5px;
+	background-color: white;
+	padding-left: 15px;
+}
+
+.main-login a{
+	color: lightgrey;
+}
+
+.main-login a:hover {
+	color: rgba(255,255,255,0.9);
+}
+
+/*
+	___FOOTER___
+*/
+
+footer{
+	background-color: #222;
+	padding: 35px 0px
+
+}
+
+footer h3{
+	color: rgba(255,255,255,0.8);
+	text-align: center;
+	font-size: 1.5em;
+}
+
+footer a{
+	display: block;
+	text-align: center;
+	font-size: 0.9em;
+	color: rgba(255,255,255,0.6);
+
+}
+
+footer a:hover {
+	color: rgba(255,255,255,0.9);
+}
+
+footer hr{
+	border-color: rgba(255,255,255,0.1);
+	margin: 15px;
+}
+
+footer a span{
+	font-weight: bold;
+	color: rgba(255,255,255,0.7);
+
+}
+
+@media only screen and (max-width: 40em) {
+	.nav-desktop{
+		display: none;
+	} 
+}
+
+@media (max-width: 372px){
+	.hero h1 .hero p{
+	width: 100%;
+	}
+}
+
+meter {
+  /* Reset the default appearance */
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+
+  margin: 0 auto 1em;
+  align-content: center;
+  width: 75%;
+  height: 0.5em;
+
+  /* Applicable only to Firefox */
+  background: none;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Webkit based browsers for register password meter*/
+meter[value="1"]::-webkit-meter-optimum-value { background: red; }
+meter[value="2"]::-webkit-meter-optimum-value { background: orange; }
+meter[value="3"]::-webkit-meter-optimum-value { background: yellow; }
+meter[value="4"]::-webkit-meter-optimum-value { background: green; }
+
+/* Gecko based browsers for register password meter*/
+meter[value="1"]::-moz-meter-bar { background: red; }
+meter[value="2"]::-moz-meter-bar { background: orange; }
+meter[value="3"]::-moz-meter-bar { background: yellow; }
+meter[value="4"]::-moz-meter-bar { background: green; }
