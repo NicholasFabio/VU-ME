@@ -28,6 +28,22 @@ class Server
         else
             return false;
     }
+
+    public static function hashPassword($password):string{
+        return password_hash($password,PASSWORD_DEFAULT);
+    }
+
+    public static function login($username, $password):bool{
+        $isSuccess = false;
+            if(is_string($username) && is_string($password)){
+                // create instacne of database
+                // create instance of session
+                // run commands to DB to verify the user is registered
+                // gather results from the DB if the results are present
+                // set $isSuccessful to true else it remains false
+            }
+        return $isSuccess;
+    }
 }
 
 // Superglobal variable POST used to retreive any data sent from the client side
@@ -40,8 +56,15 @@ if (!empty($_POST)) {
         // Based on the action provided the server will interact appropriately
         switch ($action) {
             case 'testServer':
-                $response = json_encode("Your server is running =)!");
+                $response = json_encode("true");
                 break;
+
+            case 'login':
+                break;
+
+            case 'register':
+                break;
+
             default:
                 //If the action was not one of the handled cases by the server
                 $response = json_encode("Invalid Request.");

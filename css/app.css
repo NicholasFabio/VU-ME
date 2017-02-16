@@ -189,6 +189,7 @@ body{
 
 .main-register p, label{
 	color: #FFF;
+	font-size: 17px;
 }
 
 .main-register h3{
@@ -208,6 +209,7 @@ body{
 .register-wrapper{
 	text-align: center;
 	height: 60%;
+	font-size: 17px;
 	width:60%;
 	margin-left: 20%;
 	background-color: rgba(0,0,0,0.8);

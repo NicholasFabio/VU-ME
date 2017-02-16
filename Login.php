@@ -81,7 +81,7 @@
                         </div>
                         </p>
                         <p align="center">
-                            <a href="#" class="button">LOGIN</a>
+                            <a href="#" class="button" onclick="sendAJAXRequest('testServer', handleResponse)">LOGIN</a>
                         <hr width="75%">
                         <a href="Register.php">Have'nt got an account yet?</a>
                         </p>

@@ -81,7 +81,7 @@ function sendAJAXRequest (action, responseFunction, formID) {
                 //All ajax requests are handled by php/classes/SebenzaServer.php
                 $.ajax({
                     type: 'POST',
-                    url: 'php/classes/SebenzaServer.php',
+                    url: 'php/classes/Server.php',
                     data: dataObject,
                     success: responseFunction
                 });
@@ -89,7 +89,7 @@ function sendAJAXRequest (action, responseFunction, formID) {
         } else {
             $.ajax({
                 type: 'POST',
-                url: 'php/classes/SebenzaServer.php',
+                url: 'php/classes/Server.php',
                 data: {action: action},
                 success: responseFunction
             });
@@ -99,9 +99,9 @@ function sendAJAXRequest (action, responseFunction, formID) {
 
 function handleResponse(response) {
     var success = JSON.parse(response);
-    console.log(success);
+
     if (success) {
-      // do something
+        console.log("First log result is a: " + success + " Your server is running");
     } else {
         //var displayProperty = document.getElementById('invalid-credentials-message').style.display.toLowerCase();
         // if (displayProperty == '' || displayProperty == 'none') {
