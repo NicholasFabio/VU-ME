@@ -21,7 +21,7 @@ class Session
     function __construct(...$session_Key_Values){
         $this->startSession();
         if(isset($session_Key_Values)){
-            $this->setSessionsVars(...$session_Key_Values);
+             $this->setSessionVars(...$session_Key_Values);
         }
     }
 
@@ -79,8 +79,8 @@ class Session
 
     /**
      * Assigns a single key to a value provided
-     * @param $key The session key
-     * @param $value The session Value assigned to the given key
+     * @param $key Session key
+     * @param $value Session Value assigned to the given key
      * @return bool
      */
     public function setSessionVar($key,$value):bool{
@@ -119,6 +119,62 @@ class Session
      * @return bool
      */
     private function regenSessionID():bool{
+        $this->idUseCount = 0;
+        return session_regenerate_id();
+    }
+
+
+    public function setSessionVariables(...$keyValuePairs):bool {
+        $setVariables = true;
+        if (isset($keyValuePairs) && !empty($keyValuePairs)) {
+            foreach ($keyValuePairs as $pair) {
+                if (is_array($pair) && count($pair) == 2) {
+                    $setVariables = $setVariables && $this->setSessionVariable($pair[0],$pair[1]);
+                }
+            }
+        }
+        return $setVariables;
+    }
+
+    public function setSessionVariable($key, $value):bool {
+        $setVariable = false;
+        if (is_string($key) && isset($value) && $this->isActive()) {
+            $_SESSION[$key] = $value;
+            $setVariable = true;
+            $this->updateSessionID();
+        }
+        return $setVariable;
+    }
+
+    public function getSessionVariable($key) {
+        $variable = null;
+        if ($this->exists($key)) {
+            $variable = $_SESSION[$key];
+        }
+        $this->updateSessionID();
+        return $variable;
+    }
+
+    public function exists($key):bool {
+        return is_string($key) && isset($_SESSION[$key]);
+    }
+
+    /**
+     * @return int The number of variables stored in the current session.
+     */
+    public function variableCount():int {
+        return count($_SESSION);
+    }
+
+    public function isEmpty():bool {
+        return $this->variableCount() === 0;
+    }
+
+    /**
+     * Regenerate the ID associated with this session.
+     * @return bool
+     */
+    private function regenerateSessionID():bool {
         $this->idUseCount = 0;
         return session_regenerate_id();
     }
