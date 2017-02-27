@@ -71,17 +71,17 @@
                 <hr>
                 <div class="container">
                     <img src="img/Pigeon.png">
-                    <form>
+                    <form id ="login-form">
                         <p align="center">
                         <div class="form-input">
-                            <input type="text" name="username" placeholder="Enter Username">
+                            <input type="text" name="username" id="username" placeholder="Enter Username">
                         </div>
                         <div class="form-input">
-                            <input type="password" name="password" placeholder="Enter Password">
+                            <input type="password" name="password" id="password" placeholder="Enter Password">
                         </div>
                         </p>
                         <p align="center">
-                            <a href="#" class="button" onclick="sendAJAXRequest('testServer', handleResponse)">LOGIN</a>
+                            <a href="#" class="button" onclick="sendAJAXRequest('login', handleLoginResponse, 'login-form')">LOGIN</a>
                         <hr width="75%">
                         <a href="Register.php">Have'nt got an account yet?</a>
                         </p>

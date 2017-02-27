@@ -8,7 +8,9 @@ CREATE TABLE `REGISTERED_USER`(
   `Username` varchar(40) not null UNIQUE,
   `Name` varchar(40) not null,
   `Surname` varchar(40) not null,
-  `Email` varchar(40) not null UNIQUE ,
+  `Gender` tinyint not null,
+  `Email` varchar(40) not null UNIQUE,
+  `ContactNumber` varchar(15) not null,
   `Password` varchar(255) not null,
   `UserType` tinyint not null,
   PRIMARY KEY (`UserID`)

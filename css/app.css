@@ -219,7 +219,7 @@ body{
 }
 
 .main-register input{
-	width: 45%;
+	width: 55%;
 	height: 50px;
 	margin-bottom: 20px;
 	margin-left: 80px;
@@ -247,6 +247,13 @@ body{
 	color: rgba(255,255,255,0.9);
 }
 
+.main-register .select-wrap-reg{
+	width: 55%;
+	height: 50px;
+	margin-bottom: 20px;
+	margin-left: 80px;
+	border-radius: 5px;
+}
 /*
 	___FOOTER___
 */

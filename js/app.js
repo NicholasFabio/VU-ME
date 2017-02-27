@@ -1,6 +1,6 @@
-$(document).foundation()
+$(document).foundation();
 
-var strength = {
+/*var strength = {
   0: "Very Weak",
   1: "Weak",
   2: "Reasonable",
@@ -25,7 +25,8 @@ password.addEventListener('input', function() {
   } else {
     text.innerHTML = "";
   }
-});
+});*/
+
 
 function sendAJAXRequest (action, responseFunction, formID) {
     //Check the types of the parameters
@@ -97,15 +98,93 @@ function sendAJAXRequest (action, responseFunction, formID) {
     }
 }
 
+function validateForm(formID) {
+    var success = true;
+    var focus = false;
+    if (typeof formID == 'string') {
+        //Collect input tags belonging to the form
+        var form = document.getElementById(formID);
+        if (form != null) {
+            var inputTags = form.getElementsByTagName('input');
+
+            currentInputSuccess = true;
+            if (inputTags.length > 0) {
+                var inputTag;
+                var i;
+                for (i = 0; i < inputTags.length; i++) {
+                    inputTag = inputTags[i];
+                    console.log(inputTag.name + " " + inputTag.value);
+                    if (inputTag.name.substring(0,6) != "ignore") {
+
+                        var inputToggleID = inputTag.name + '-info';
+                        //remove the line underneath once all forms have been completed
+                        //console.log("These are the input tag names: " + inputTag.name);
+                        var inputFoundationID = '#' + inputToggleID;
+                        var inputClassName = inputTag.className;
+                        var inputDisplayProperty = document.getElementById(inputToggleID);
+
+                        //Alpha-numeric validation
+                        if (inputClassName.indexOf("AN_VAL") > -1 && !inputTag.value.match(alphaNumericRE)) {
+                            currentInputSuccess = false;
+                            if(!focus){
+                                //console.log("Focusing on " + inputToggleID);
+                                document.getElementById(inputTag.name).focus();
+                                focus = true;
+                            }
+                        }
+
+                     /*   //Required field validation
+                        if (inputClassName.indexOf("REQ_VAL") > -1 && inputTag.value.length == 0) {
+                            currentInputSuccess = false;
+                            if(!focus){
+                                //console.log("Focusing on " + inputToggleID.substring(0,inputToggleID.length-5) + " " + inputTag.name);
+                                document.getElementById(inputTag.name).focus();
+                                focus = true;
+                            }
+                        }
+
+                        //Toggle display of messages
+                        if (currentInputSuccess && inputDisplayProperty != '' && inputDisplayProperty != 'none') {
+                            $(inputFoundationID).foundation('toggle');
+                        } else if (!currentInputSuccess && (inputDisplayProperty == '' || inputDisplayProperty == 'none')) {
+                            $(inputFoundationID).foundation('toggle');
+                        }*/
+                        //Set success to false if applicable
+                        success &= currentInputSuccess;
+                    }
+                }
+            } else {
+                console.log("The form " + formID + " had no input elements to validate.");
+            }
+        } else {
+            console.log("Could not validate. No form with the id: " + formID);
+        }
+    } else {
+        success = false;
+    }
+    //console.log(success);
+    return success;
+}
+
 function handleResponse(response) {
     var success = JSON.parse(response);
-
     if (success) {
-        console.log("First log result is a: " + success + " Your server is running");
+        console.log("Result: ");
+        console.log(success);
     } else {
         //var displayProperty = document.getElementById('invalid-credentials-message').style.display.toLowerCase();
         // if (displayProperty == '' || displayProperty == 'none') {
         //   $('#invalid-credentials-message').foundation('toggle');
         //}
     }
+}
+
+function handleLoginResponse(response){
+    //var success = JSON.parse(response);
+    console.log(response) ;
+    //if(success){
+    //    console.log("Logged in!")
+    //}else{
+    //    console.log("Cannot log in");
+    //}
 }

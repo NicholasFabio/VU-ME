@@ -26,9 +26,9 @@
         <!-- OFF CANVAS MOBILE MENU SECTION GOES TO THE LEFT-->
         <div class="off-canvas position-left" id="mobile-menu" data-off-canvas>
             <ul>
-                <li><a href="#" >Home</a></li>
+                <li><a href="Index.php" >Home</a></li>
                 <li><a href="#" >About</a></li>
-                <li><a href="#" >Log In</a></li>
+                <li><a href="Login.php" >Log In</a></li>
                 <li><a href="#" >Contact</a></li>
             </ul>
         </div>
@@ -52,9 +52,9 @@
                     </div>
                     <div class="top-bar-right">
                         <ul class="menu menu-desktop">
-                            <li><a href="#" >Home</a></li>
+                            <li><a href="Index.php" >Home</a></li>
                             <li><a href="#" >About</a></li>
-                            <li><a href="#" >Log In</a></li>
+                            <li><a href="Login.php" >Log In</a></li>
                             <li><a href="#" >Contact</a></li>
                         </ul>
                     </div>
@@ -64,12 +64,11 @@
 
             <!-- MAIN SECTION -->
             <section class="main-register">
-                <form>
+                <form id="register-form">
                     <div class="register-wrapper">
                         <h3> Create an account</h3>
                         <hr width="80%">
                         <div class="form-input">
-                            <p align="center">
 
                             <div class="row">
                                 <div class="small-12 columns">
@@ -97,6 +96,36 @@
                                 </div>
                             </div>
 
+                                <div class="row">
+                                    <div class="small-12 columns">
+                                        <div class="row">
+                                            <div class="small-3 columns">
+                                                <label for="username" class="right inline">Username</label>
+                                            </div>
+                                            <div class="small-9 columns">
+                                                <input type="text" id="username">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            <div class="row">
+                                <div class="small-12 columns">
+                                    <div class="row">
+                                        <div class="small-3 columns">
+                                            <label for="gender" class="right inline">Gender</label>
+                                        </div>
+                                        <div class="small-9 columns">
+                                            <div class="select-wrap-reg">
+                                            <select>
+                                                <option value="1">Male</option>
+                                                <option value="2">Female</option>
+                                            </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                             <div class="row">
                                 <div class="small-12 columns">
@@ -106,6 +135,19 @@
                                         </div>
                                         <div class="small-9 columns">
                                             <input type="text" id="email">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="small-12 columns">
+                                    <div class="row">
+                                        <div class="small-3 columns">
+                                            <label for="contactDetails" class="right inline">Mobile Number</label>
+                                        </div>
+                                        <div class="small-9 columns">
+                                            <input type="text" id="contactDetails">
                                         </div>
                                     </div>
                                 </div>
@@ -137,26 +179,10 @@
                                 </div>
                             </div>
 
-
-                            <div class="row">
-                                <div class="small-9 columns">
-                                    <div class="row">
-                                        <div class="small-4 columns">
-                                        </div>
-                                        <div class="small-8 columns">
-                                            <meter max="4" id="password-strength-meter"></meter>
-                                            <p id="password-strength-text"></p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            </p>
-
                             <p align="center">
                                 <a class="button">SIGN UP</a>
-                            <hr width="75%">
-                            <p>Already have an account? <a href="Login.php">Login</a> </p>
+                                <hr width="75%">
+                                <p>Already have an account? <a href="Login.php">Login</a> </p>
                             </p>
 
                         </div>
@@ -195,11 +221,12 @@
 </div>
 
 
+
 <script src="js/vendor/jquery.js"></script>
 <script src="js/vendor/what-input.js"></script>
 <script src="js/vendor/foundation.js"></script>
 <script src="js/app.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.2.0/zxcvbn.js"></script>
+
 
 </body>
 </html>
