@@ -8,9 +8,12 @@ CREATE TABLE `REGISTERED_USER`(
   `Username` varchar(40) not null UNIQUE,
   `Name` varchar(40) not null,
   `Surname` varchar(40) not null,
-  `Email` varchar(40) not null UNIQUE ,
+  `Gender` tinyint not null,
+  `Email` varchar(40) not null UNIQUE,
+  `ContactNumber` varchar(15) not null,
   `Password` varchar(255) not null,
   `UserType` tinyint not null,
+  `ProfilePicture` varchar(100) not null,
   PRIMARY KEY (`UserID`)
 );
 
@@ -58,10 +61,10 @@ CREATE TABLE `COMMENTS`(
 );
 
 
-INSERT INTO `REGISTERED_USER` (`UserID`,`Username`,`Name`,`Surname`,`Email`,`Password`, `UserType`) VALUES
-  (1, 'nick', 'Nicholas', 'Rader', 'nick@email.co.za', '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW',3),
-  (2, 'byzo', 'Byron', 'Mills', 'byron@email.co.za', '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW',1),
-  (3, 'jords', 'Jordan', 'Van Vuuren', 'jordan@email.co.za', '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW',1);
+INSERT INTO `REGISTERED_USER` (`UserID`,`Username`,`Name`,`Surname`,`Gender`,`Email`,`ContactNumber`,`Password`, `UserType`,`ProfilePicture`) VALUES
+  (1, 'nick', 'Nicholas', 'Rader',1, 'nick@email.co.za','0834605522', '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW',3,'/img/userResources/default'),
+  (2, 'byzo', 'Byron', 'Mills',1, 'byron@email.co.za','0834605522', '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW',1,'/img/userResources/default'),
+  (3, 'jords', 'Jordan', 'Van Vuuren',1, 'jordan@email.co.za','0834605522', '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW',1,'/img/userResources/default');
 
 INSERT INTO `FOLLOWERS` (`UserID`,`FollowerID`) VALUES
   (2,3),

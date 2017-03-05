@@ -1,4 +1,9 @@
-$(document).foundation();
+
+$(document).ready(function () {
+    $('form').submit(function () {
+        return false;
+    });
+});
 
 /*var strength = {
   0: "Very Weak",
@@ -180,11 +185,101 @@ function handleResponse(response) {
 }
 
 function handleLoginResponse(response){
-    //var success = JSON.parse(response);
-    console.log(response) ;
-    //if(success){
-    //    console.log("Logged in!")
-    //}else{
-    //    console.log("Cannot log in");
-    //}
+    var success = JSON.parse(response);
+    if(success){
+        console.log("Logged in!");
+        window.location = 'Feeds.php';
+    }else{
+        console.log("Cannot log in");
+    }
+}
+
+function handleLogoutResponse(response) {
+    window.location = '/';
+}
+
+function handleServerValidation(response) {
+    var success = JSON.parse(response);
+    if (success) {
+        // do nothing as the user can proceed
+    } else {
+        // if no session exists send the user back to the login screen
+        window.location = 'Login.php';
+    }
+}
+
+function handleFetchUserDetials(response){
+    $response = JSON.parse(response);
+    console.log($response);
+    var p = document.getElementById("details");
+    p.innerHTML = "Welcome " + $response[0]["Name"] + "!";
+   // p.val =  "" ;//response[0]['Name'];
+}
+
+function handleFetchUsers(response){
+    $response = JSON.parse(response);
+    console.log($response);
+    var t = document.getElementById("feeds-table");
+    //t.innerHTML = "<tbody> <tr></tr>";
+    for(var i = 0; i < $response.length; i++){
+        var count = i ;
+
+        t.innerHTML +=  $response[i]["Username"] + "<br>" + "POST HERE" + "<hr width='50%'>" ;
+
+    }
+    //t.innerHTML = "</tbody> ";
+
+}
+
+function handleFetchFollowers(response){
+    var res = JSON.parse(response);
+    console.log(res);
+    var UserName = "";
+    var PPic = "" ;
+    var display = document.getElementById("followers-Display");
+    display.innerHTML = "" ;
+    for(var i = 0; i < res.length ;i++){
+        UserName = res[i][0]['Username'] ;
+        PPic = res[i][0]['ProfilePicture'] ;
+        // display.innerHTML = "<img src='" + PPic + "'>";
+        //display.innerHTML += UserName ;
+        DisplayImage_text(PPic,'followers-Display', UserName);
+
+    }
+
+
+    //document.getElementById("followers").disabled = true;
+}
+
+function handleFetchFollowing(response){
+    var res = JSON.parse(response);
+    console.log(res);
+    var UserName = "";
+    var PPic = "" ;
+    var display = document.getElementById("following-Display");
+    display.innerHTML = "" ;
+        for (var i = 0; i < res.length; i++) {
+            UserName = res[i][0]['Username'];
+            PPic = res[i][0]['ProfilePicture'];
+            // display.innerHTML = "<img src='" + PPic + "'>";
+            //display.innerHTML += UserName ;
+            DisplayImage_text(PPic, 'following-Display', UserName);
+
+        }
+
+
+    // document.getElementById("following").disabled = true;
+
+}
+
+function DisplayImage_text(path, ElementId, username) {
+    var image = document.createElement("IMG");
+    var Uname = document.createTextNode(username);
+    image.src = path;
+    image.width=100;
+    image.height=100;
+    document.getElementById(ElementId).appendChild(Uname) ;
+    document.getElementById(ElementId).appendChild(image);
+    document.getElementById(ElementId).innerHTML += '&nbsp' ;
+    //document.getElementById(ElementId).innerHTML += "<br><hr width='40%'>" ;
 }

@@ -16,7 +16,7 @@
     <title>ViewME</title>
     <link rel="stylesheet" href="css/foundation.css">
     <link rel="stylesheet" href="css/app.css">
-    <link rel="shortcut icon" type="image/png" href="img/r1.png" />
+    <link rel="shortcut icon" type="image/png" href="img/r1.jpg" />
 </head>
 <body>
 
@@ -125,6 +125,7 @@
 <script src="js/vendor/what-input.js"></script>
 <script src="js/vendor/foundation.js"></script>
 <script src="js/app.js"></script>
+
 </body>
 </html>
 

@@ -25,7 +25,7 @@
     <title>VU-ME</title>
     <link rel="stylesheet" href="css/foundation.css">
     <link rel="stylesheet" href="css/app.css">
-    <link rel="shortcut icon" type="image/png" href="img/r1.png" />
+    <link rel="shortcut icon" type="image/png" href="img/r1.jpg" />
 </head>
 <body>
 

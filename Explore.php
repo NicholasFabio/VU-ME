@@ -2,10 +2,11 @@
 /**
  * Created by PhpStorm.
  * User: Nick
- * Date: 2017-02-22
- * Time: 09:16 PM
+ * Date: 2017-03-05
+ * Time: 09:54 PM
  */
 ?>
+
 
 <!doctype html>
 <html class="no-js" lang="en" dir="ltr">
@@ -28,7 +29,7 @@
         <div class="off-canvas position-left" id="mobile-menu" data-off-canvas>
             <ul>
                 <li><a href="#" onclick="sendAJAXRequest('logout',handleLogoutResponse())">Log Out</a></li>
-                <li><a href="#" >Explore</a></li>
+                <li><a href="#" >Feeds</a></li>
                 <li><a href="#" >Profile</a></li>
                 <li><a href="#" >Followers</a></li>
                 <li><a href="#" >Following</a></li>
@@ -55,7 +56,7 @@
                     </div>
                     <div class="top-bar-right">
                         <ul class="menu menu-desktop">
-                            <li><a href="Explore.php"><img src="img/V-logo2.png" width="45" height="45" alt="Explore"></a></li>
+                            <li><a href="Feeds.php">Feeds</a></li>
                             <li><a id="details"></a></li>
                             <li><a href="#" onclick="sendAJAXRequest('logout',handleLogoutResponse())" >Log Out</a></li>
                         </ul>
@@ -66,31 +67,20 @@
             <!-- MAIN SECTION -->
             <section class="main-feeds">
                 <form>
-                <div class="feed-container">
-                    <h3>Feed's</h3>
-                    <hr>
-                    <div class="feeds">
-                        <p id="feeds-table">
+                    <div class="feed-container">
 
-                        </p>
+                        <div class="Explore-feeds">
+
+                        </div>
+
                     </div>
 
-                    <div id="followers-Display"></div>
-                        <br><hr><br>
-                    <div id="following-Display"></div>
 
-                    <br><br>
-                      <button class="button " id ="followers" onclick="sendAJAXRequest('fetch-followers',handleFetchFollowers)" >Followers</button>
-                      <button class="button success"id="following"  onclick="sendAJAXRequest('fetch-following',handleFetchFollowing)">Following</button>
-
-                </div>
+                </form>
+            </section>
 
 
-                   </form>
-               </section>
-
-
-               <!-- FOOTER SECTION -->
+            <!-- FOOTER SECTION -->
             <footer>
                 <div class="wrap row small-up-1 medium-up-3">
                     <div class="column">
@@ -134,6 +124,4 @@
 
 </body>
 </html>
-
-
 
