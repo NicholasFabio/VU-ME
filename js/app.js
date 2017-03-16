@@ -195,7 +195,14 @@ function handleLoginResponse(response){
 }
 
 function handleLogoutResponse(response) {
-    window.location = '/';
+    var s = JSON.parse(response);
+
+    if(s) {
+        window.location = '/';
+    }else{
+        console.log(s);
+    }
+    console.log(s);
 }
 
 function handleServerValidation(response) {
@@ -234,6 +241,8 @@ function handleFetchUsers(response){
 function handleFetchFollowers(response){
     var res = JSON.parse(response);
     console.log(res);
+    var prev = document.getElementById("following-Display");
+    prev.innerHTML= "";
     var UserName = "";
     var PPic = "" ;
     var display = document.getElementById("followers-Display");
@@ -254,6 +263,8 @@ function handleFetchFollowers(response){
 function handleFetchFollowing(response){
     var res = JSON.parse(response);
     console.log(res);
+    var prev = document.getElementById("followers-Display");
+    prev.innerHTML= "";
     var UserName = "";
     var PPic = "" ;
     var display = document.getElementById("following-Display");
@@ -282,4 +293,23 @@ function DisplayImage_text(path, ElementId, username) {
     document.getElementById(ElementId).appendChild(image);
     document.getElementById(ElementId).innerHTML += '&nbsp' ;
     //document.getElementById(ElementId).innerHTML += "<br><hr width='40%'>" ;
+}
+
+function handleFetchFollowingPosts(response){
+    var res = JSON.parse(response);
+    console.log(res);
+}
+
+var x = document.getElementById("location");
+function getLocation() {
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+        x.innerHTML = "Geolocation is not supported by this browser.";
+    }
+}
+function showPosition(position) {
+    x.innerHTML = "Latitude: " + position.coords.latitude +
+        "<br>Longitude: " + position.coords.longitude;
 }

@@ -2,11 +2,10 @@
 /**
  * Created by PhpStorm.
  * User: Nick
- * Date: 2017-03-05
- * Time: 09:54 PM
+ * Date: 2017-03-06
+ * Time: 05:26 PM
  */
 ?>
-
 
 <!doctype html>
 <html class="no-js" lang="en" dir="ltr">
@@ -18,7 +17,6 @@
     <link rel="stylesheet" href="css/foundation.css">
     <link rel="stylesheet" href="css/app.css">
     <link rel="shortcut icon" type="image/png" href="img/r1.jpg" />
-
 </head>
 <body>
 
@@ -29,7 +27,7 @@
         <div class="off-canvas position-left" id="mobile-menu" data-off-canvas>
             <ul>
                 <li><a href="#" onclick="sendAJAXRequest('logout',handleLogoutResponse())">Log Out</a></li>
-                <li><a href="#" >Feeds</a></li>
+                <li><a href="#" >Explore</a></li>
                 <li><a href="#" >Profile</a></li>
                 <li><a href="#" >Followers</a></li>
                 <li><a href="#" >Following</a></li>
@@ -56,26 +54,26 @@
                     </div>
                     <div class="top-bar-right">
                         <ul class="menu menu-desktop">
-                            <li><a href="Feeds.php">Feeds</a></li>
-                            <li><a href="UserProfile.php"id="details"></a></li>
-                            <li><a href="#" onclick="sendAJAXRequest('logout',handleLogoutResponse)" >Log Out</a></li>
+                            <li><a href="#" onclick="sendAJAXRequest('fetch-followers',handleFetchFollowers)"> Followers</a></li>
+                            <li><a href="#" onclick="sendAJAXRequest('fetch-following',handleFetchFollowing)"> Following</a></li>
+                            <li><a href="Explore.php"><img src="img/V-logo2.png" width="45" height="45" alt="Explore"></a></li>
+                            <li><a id="details"></a></li>
+                            <li><a href="#" onclick="sendAJAXRequest('logout',handleLogoutResponse)">Log Out</a></li>
                         </ul>
                     </div>
                 </div>
             </nav>
 
             <!-- MAIN SECTION -->
-            <section class="main-feeds">
+            <section class="main-profile">
                 <form>
-                    <div class="feed-container">
-
-                        <div class="Explore-feeds">
-
-                        </div>
-
+                    <div class="profile-container">
+                        <h3>Customize Your Profile</h3>
+                        <hr>
+                            <div id="followers-Display"></div>
+                            <div id="following-Display"></div>
+                        <br>
                     </div>
-
-
                 </form>
             </section>
 
@@ -110,18 +108,21 @@
 </div>
 
 
-
 <script src="js/vendor/jquery.js"></script>
 <script src="js/vendor/what-input.js"></script>
 <script src="js/vendor/foundation.js"></script>
 <script src="js/app.js"></script>
+
 <script>
     sendAJAXRequest('validate-session',handleServerValidation);
     sendAJAXRequest('fetch-user-details', handleFetchUserDetials);
-    //sendAJAXRequest('fetch-users', handleFetchUsers);
+    //sendAJAXRequest('fetch-following-posts', handleFetchFollowingPosts);
 </script>
 
 
 </body>
 </html>
+
+
+
 

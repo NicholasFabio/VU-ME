@@ -65,10 +65,14 @@ body{
 .feed-container{
 	text-align: center;
 	align-content: center;
-
 	margin: 0 auto;
 }
 
+.profile-container{
+	text-align: center;
+	align-content: center;
+	margin: 0 auto;
+}
 .wrap{
 	width: 90%;
 	margin: 0 auto;
@@ -183,16 +187,25 @@ body{
 .main{
 	padding: 35px 0px;
 }
+
 .main-login{
 	padding: 55px 0px;
 	background-image: url("../img/flying.jpg");
 	background-size: 100% 720px;
 }
 
+.main-posts{
+	padding: 30px 0px;
+}
+
 .main-feeds{
 	padding: 30px 0px;
 }
 
+.main-profile{
+	padding: 30px 0px;
+
+}
 .main-register{
 	padding: 55px 0px;
 	background-image: url("../img/r1.jpg");

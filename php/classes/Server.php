@@ -12,8 +12,13 @@ include_once $_SERVER['DOCUMENT_ROOT'] . "/php/classes/DatabaseHandler.php";
 
 class Server
 {
+
     public static function startServer() {
         ob_start() ;
+        // set the default php timezone to Johannesburg in Africa
+        if (date_default_timezone_get()!=="Africa/Johannesburg") {
+            date_default_timezone_set("Africa/Johannesburg");
+        }
     }
 
     public static function stopServer(){
@@ -167,6 +172,136 @@ class Server
         }
     }
 
+    // This function fetchs all posts that a User is following
+    public static function fetchFollowingPosts(){
+
+        $uID = self::fetchSessionHandler()->getSessionVariable("UserID");
+        $dbHandler = self::fetchDatabaseHandler();
+        $dbHandler->runCommand("SELECT * FROM `FOLLOWING` WHERE `UserID` = ?",$uID);
+        $results = $dbHandler->getResults();
+        $FollowingValues = null;
+        $count = 0;
+        if($results != null ){
+            // loop through each Following user ID for a specific user
+            for($i = 0; $i < count($results); $i++){
+                $followingID = $results[$i]['FollowingUserID'] ;
+                $dbHandler->runCommand("SELECT COUNT(*) FROM `POST` WHERE `UserID` = ?",$followingID );
+                $res = $dbHandler->getResults();
+                // loop through each followed user
+                for($r= 0; $r <count($res);$r++){
+                    $dbHandler->runCommand("SELECT * FROM `POST` WHERE `UserID` = ? ORDER BY `TimePosted` ASC",$followingID);
+                    $FollowingValues = $dbHandler->getResults();
+                    // loop through each post by the followed user
+                   for($j = 0; $j < count($FollowingValues); $j++) {
+                       $count++ ;
+                       $returnValue[$count]['PostID'] = $FollowingValues[$j]['PostID'];
+                       $returnValue[$count]['UserID'] = $FollowingValues[$j]['UserID'];
+                       $returnValue[$count]['Text'] = $FollowingValues[$j]['Text'];
+                       $returnValue[$count]['Source'] = $FollowingValues[$j]['Source'];
+                       $returnValue[$count]['Visibility'] = $FollowingValues[$j]['Visibility'];
+                       $returnValue[$count]['TimeViewable'] = $FollowingValues[$j]['TimeViewable'];
+                       $returnValue[$count]['TimePosted'] = $FollowingValues[$j]['TimePosted'];
+
+                   }
+                }
+
+            }
+            return $returnValue;//$returnValue ;
+        }else{
+            return $returnValue = null ;
+        }
+
+
+    }
+
+
+    //TODO perform validation on user if following or not when the user clicks on the user they want to follows profile instead of on the follow button click
+    public static function followUser($UserToFollowUsername,$userID): bool{
+        $isFollowed = false;
+        $canFollow = false ;
+        $dbHandler = self::fetchDatabaseHandler();
+        $dbHandler->runCommand("SELECT `UserID` FROM `REGISTERED_USER` WHERE `Username` = ?" ,$UserToFollowUsername);
+        $UserToFollowID = $dbHandler->getResults();
+
+        if($UserToFollowID!= null){
+            $dbHandler->runCommand("SELECT * FROM FOLLOWING WHERE `UserID` =?",$userID);
+            $results = $dbHandler->getResults();
+                //loop through to check if a user is already following the user
+            for($i = 0; $i < count($results); $i++){
+                if($results[$i]['FollowingUserID'] == $UserToFollowID ){
+                    $isFollowed = true;
+                }
+            }
+            // if no results were found with corresponding ID's in database the user can then proceed to follow
+            if($isFollowed==false)
+                $canFollow = true ;
+
+        }
+
+        if($canFollow){
+            $dbHandler->runCommand("INSERT INTO `FOLLOWING`(`UserID`,`FollowingUserID`) VALUES (?,?)",$userID,$UserToFollowID) ;
+            $res = $dbHandler->getResults();
+            if($res!= null) {
+                return true;
+            }else{
+                return false ;
+            }
+
+        }else{
+            return false ;
+        }
+
+    }
+
+    //TODO perform validation on user if following or not when the user clicks on the user they want to follows profile instead of on the un-follow button click
+    public static function unfollowUser($UserToUnfollowUsername, $userID):bool{
+        $isFollowed = false;
+        $canUnFollow = false ;
+        $dbHandler = self::fetchDatabaseHandler();
+        $dbHandler->runCommand("SELECT `UserID` FROM `REGISTERED_USER` WHERE `Username` = ?" ,$UserToUnfollowUsername);
+        $UserToUnFollowID = $dbHandler->getResults();
+
+        if($UserToUnFollowID != null){
+            $dbHandler->runCommand("SELECT * FROM FOLLOWING WHERE `UserID` =?",$userID);
+            $results = $dbHandler->getResults();
+            //loop through to check if a user is already following the user
+            for($i = 0; $i < count($results); $i++){
+                if($results[$i]['FollowingUserID'] == $UserToUnFollowID ){
+                    $isFollowed = true;
+                }
+            }
+            // if a result was found with corresponding ID's in database the user can then proceed to unfollow
+            if($isFollowed==true)
+                $canUnFollow = true ;
+
+        }
+
+        if($canUnFollow){
+            $dbHandler->runCommand("DELETE FROM `FOLLOWING` WHERE `UserID` = ? AND `FollowingUserID` = ?",$userID,$UserToUnFollowID) ;
+            $res = $dbHandler->getResults();
+            if($res!= null) {
+                return true;
+            }else{
+                return false ;
+            }
+
+        }else{
+            return false ;
+        }
+    }
+
+    public static function updateUserLocation($userID, $lat, $long){
+        $isSuccess = false ;
+        $dbHandler = self::fetchDatabaseHandler();
+        $dbHandler->runCommand("INSERT INTO `LOCATION`(`UserID`,`Latitude`,`Longitude`) VALUES (?,?,?)",$userID,$lat,$long);
+        $results = $dbHandler->getResults();
+        if($results!= null){
+            return $isSuccess = true ;
+        }else{
+            return $isSuccess ;
+        }
+    }
+
 }
 
 // Superglobal variable POST used to retrieve any data sent from the client side
@@ -197,7 +332,7 @@ if (!empty($_POST)) {
                 break;
 
             case 'logout':
-                $response = json_encode("OK1012");
+                $response = json_encode(Server::logout());
                 break;
 
             case 'register':
@@ -222,7 +357,6 @@ if (!empty($_POST)) {
                 break;
 
             case 'fetch-following':
-
                $OK = Server::serverSecurityValidation();
                 if ($OK) {
                     $response = json_encode(Server::fetchFollowing());
@@ -230,6 +364,46 @@ if (!empty($_POST)) {
                     $response = json_encode("User is required to log In again");
                 }
                  break;
+
+            case 'fetch-following-posts':
+                $OK = Server::serverSecurityValidation();
+                    if($OK){
+                        $response = json_encode(Server::fetchFollowingPosts());
+
+                    }else{
+                        $response = json_encode(false);
+                    }
+                break;
+
+            case 'updateLocation':
+                if(isset($_POST['UserID']) && isset($_POST['Latitude']) && isset($_POST['Longitude'])) {
+                    $response = Server::unfollowUser($_POST['UserID'],$_POST['Latitude'],$_POST['Longitude']);
+                }else{
+                    $response = "Post variables not set";
+                }
+                break;
+
+            case 'FollowUser':
+                if(isset($_POST['UserID']) && isset($_POST['UserToFollowUsername'])) {
+                    $response = Server::followUser($_POST['UserToFollowUsername'],$_POST['UserID']);
+                }else{
+                    $response = "Post variables not set";
+                }
+                break;
+
+            case 'UnFollowUser':
+                if(isset($_POST['UserID']) && isset($_POST['UserToUnFollowUsername'])) {
+                    $response = Server::unfollowUser($_POST['UserToUnFollowUsername'],$_POST['UserID']);
+                }else{
+                    $response = "Post variables not set";
+                }
+                break;
+
+            case 'BlockUser':
+                break;
+
+            case 'searchRegion':
+                break;
 
             default:
                 //If the action was not one of the handled cases by the server

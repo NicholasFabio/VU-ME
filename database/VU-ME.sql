@@ -18,6 +18,14 @@ CREATE TABLE `REGISTERED_USER`(
   PRIMARY KEY (`UserID`)
 );
 
+DROP TABLE IF EXISTS `LOCATION` ;
+CREATE TABLE `LOCATION`(
+  `UserID` integer not null,
+  `Latitude` VARCHAR(50) not null,
+  `Longitude` VARCHAR(50) not null,
+  FOREIGN KEY (`UserID`) REFERENCES REGISTERED_USER(`UserID`)
+);
+
 DROP TABLE IF EXISTS `FOLLOWERS` ;
 CREATE TABLE `FOLLOWERS`(
   `UserID` integer not null,
@@ -39,8 +47,8 @@ CREATE TABLE `POST`(
   `UserID` integer not null,
   `Text` varchar(255),
   `Source` varchar(100),
-  `visibility` TINYINT not null , /* 1 = to followers only, 0 = Public*/
-  `TimeViewable` TIMESTAMP not null,
+  `Visibility` TINYINT not null , /* 1 = to followers only, 0 = Public*/
+  `TimeViewable` INTEGER not null,
   `TimePosted` TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`PostID`),
   FOREIGN KEY (`UserID`) REFERENCES REGISTERED_USER(`UserID`)
@@ -81,3 +89,9 @@ INSERT INTO `FOLLOWING` (`UserID`,`FollowingUserID`) VALUES
   (3,2),
   (1,2),
   (1,3);
+
+INSERT INTO `POST` (`PostID`,`UserID`,`Text`,`Source`,`Visibility`,`TimeViewable`,`TimePosted`) VALUES
+  (1,1,'User 1s first post','',0,'6', '2017-03-06 17:21:29'),
+  (2,2,'User 2s first post','',0,'6', '2017-03-06 18:21:29'),
+  (3,2,'User 2s second post','',1,'6', '2017-03-06 19:21:29'),
+  (4,3,'User 3s first post','',0,'6', '2017-03-06 20:21:29');
