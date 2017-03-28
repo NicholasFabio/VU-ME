@@ -157,7 +157,7 @@ class Server
     public static function fetchFollowing(){
         $uID = self::fetchSessionHandler()->getSessionVariable("UserID");
         $dbHandler = self::fetchDatabaseHandler();
-        $dbHandler->runCommand("SELECT * FROM `FOLLOWING` WHERE `UserID` = ?",$uID);
+        $dbHandler->runCommand("SELECT * FROM `FOLLOWING` WHERE `UserID` = ? AND `Notify` =? AND `Notify`=? ",$uID,0,3);
         $results = $dbHandler->getResults();
         $FollowingValues = [];
         if($results != null ){
@@ -214,6 +214,23 @@ class Server
 
     }
 
+    // This function checks wheter or not a users profile is private
+    public static function ValidatePrivateProfile($userID):bool{
+        $isPrivate = false ;
+        $dbHandler = self::fetchDatabaseHandler();
+        $dbHandler->runCommand("SELECT `Private` FROM `REGISTERED_USER` WHERE `UserID` = ?" ,$userID);
+        $result = $dbHandler->getResults();
+        if($result!= null){
+            if($result == 1){
+                // 1 means its a private profile (not for public to see)
+                $isPrivate = true ;
+            }else{
+                // anything other than 1 is non-private (should be 0)
+                $isPrivate = false ;
+            }
+        }
+        return $isPrivate;
+    }
 
     //TODO perform validation on user if following or not when the user clicks on the user they want to follows profile instead of on the follow button click
     public static function followUser($UserToFollowUsername,$userID): bool{
@@ -222,6 +239,7 @@ class Server
         $dbHandler = self::fetchDatabaseHandler();
         $dbHandler->runCommand("SELECT `UserID` FROM `REGISTERED_USER` WHERE `Username` = ?" ,$UserToFollowUsername);
         $UserToFollowID = $dbHandler->getResults();
+
 
         if($UserToFollowID!= null){
             $dbHandler->runCommand("SELECT * FROM FOLLOWING WHERE `UserID` =?",$userID);
@@ -235,18 +253,30 @@ class Server
             // if no results were found with corresponding ID's in database the user can then proceed to follow
             if($isFollowed==false)
                 $canFollow = true ;
-
         }
 
         if($canFollow){
-            $dbHandler->runCommand("INSERT INTO `FOLLOWING`(`UserID`,`FollowingUserID`) VALUES (?,?)",$userID,$UserToFollowID) ;
-            $res = $dbHandler->getResults();
-            if($res!= null) {
-                return true;
+            $isPrivate = self::ValidatePrivateProfile($UserToFollowID);
+            if($isPrivate){
+                // notify is 1 as its a private user that is now being followed, requires them to authenticate
+                $dbHandler->runCommand("INSERT INTO `FOLLOWING`(`UserID`,`FollowingUserID`,`Notify`) VALUES (?,?,?)",$userID,$UserToFollowID,0) ;
+                $res = $dbHandler->getResults();
+                if($res!= null) {
+                    return true;
+                    //TODO add the request to the notifiactions of the user to follow and perform accept or reject to request
+                }else{
+                    return false ;
+                }
             }else{
-                return false ;
+                // notify is 0 as its non private user that is now being followed
+                $dbHandler->runCommand("INSERT INTO `FOLLOWING`(`UserID`,`FollowingUserID`,`Notify`) VALUES (?,?,?)",$userID,$UserToFollowID,0) ;
+                $res = $dbHandler->getResults();
+                if($res!= null) {
+                    return true;
+                }else{
+                    return false ;
+                }
             }
-
         }else{
             return false ;
         }
@@ -301,6 +331,23 @@ class Server
             return $isSuccess ;
         }
     }
+
+
+
+
+    //TODO complete the following functions
+    // Fetch notifications should be done regularly, most probably timed or by page refresh
+    public static function fetchNotifications(){}
+    // based on the notification recieved by the user, the server can fetch the necessary information required
+    public static function fetchFollowRequests(){}
+    public static function fetchLikes(){}
+    public static function fetchComments(){}
+
+    // adding a notification based on a certain action performed by a particular user
+    public static function addNotification(){}
+    // the following functions need to then trigger a notification to the user about a comment/like from a particular user
+    public static function likePost(){}
+    public static function commentOnPost(){}
 
 }
 

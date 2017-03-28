@@ -38,6 +38,7 @@ DROP TABLE IF EXISTS `FOLLOWING` ;
 CREATE TABLE `FOLLOWING`(
   `UserID` integer not null,
   `FollowingUserID` integer not null,
+  `Notify` TINYINT not null, /*0 = default(non-private) (1 = request sent to follow) (3 = request accepted) (4 = request denied) */
   FOREIGN KEY (`UserID`) REFERENCES REGISTERED_USER(`UserID`)
 );
 
@@ -72,6 +73,17 @@ CREATE TABLE `COMMENTS`(
   PRIMARY KEY (`CommentID`)
 );
 
+DROP TABLE IF EXISTS `NOTIFICATIONS` ;
+CREATE TABLE `NOTIFICATIONS`(
+  `NotificationID` INTEGER NOT NULL,
+  `UserID` INTEGER NOT NULL ,
+  `Type` TINYINT NOT NULL, /* (1 = like) , (2 = comment) , (3 = follow Request) */
+  `TimeRecieved` TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+  `Description` VARCHAR(225) NOT NULL ,
+  FOREIGN KEY (`UserID`)REFERENCES REGISTERED_USER(`UserID`),
+  PRIMARY KEY (`NotificationID`)
+);
+
 
 INSERT INTO `REGISTERED_USER` (`UserID`,`Username`,`Name`, `Surname`,`Gender`,`Email`,`ContactNumber`,`Password`, `UserType`,`ProfilePicture`,`Private`) VALUES
   (1, 'nick', 'Nicholas', 'Rader',1, 'nick@email.co.za', '0834605522', '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW',3,'img/users/def.jpg',0),
@@ -84,11 +96,11 @@ INSERT INTO `FOLLOWERS` (`UserID`,`FollowedByUserID`) VALUES
   (2,3),
   (3,2);
 
-INSERT INTO `FOLLOWING` (`UserID`,`FollowingUserID`) VALUES
-  (2,3),
-  (3,2),
-  (1,2),
-  (1,3);
+INSERT INTO `FOLLOWING` (`UserID`,`FollowingUserID`,`Notify`) VALUES
+  (2,3,0),
+  (3,2,0),
+  (1,2,0),
+  (1,3,0);
 
 INSERT INTO `POST` (`PostID`,`UserID`,`Text`,`Source`,`Visibility`,`TimeViewable`,`TimePosted`) VALUES
   (1,1,'User 1s first post','',0,'6', '2017-03-06 17:21:29'),
