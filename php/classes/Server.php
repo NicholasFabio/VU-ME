@@ -368,7 +368,37 @@ class Server
     public static function fetchComments(){}
 
     // adding a notification based on a certain action performed by a particular user
-    public static function addNotification(){}
+    //TODO Handle the notifcation and allow reactions based on receiving a notification
+    public static function addNotification($Type, $userIDFrom,$UserID){
+        $dbHandler = self::fetchDatabaseHandler();
+        $t = self::getCurrentTime();
+        $d = self::getCurrentDate();
+        $notificationAdded = false;
+        $usernameFrom = "";
+        $description = "" ;
+
+        // get the username of user whos name is to be seen by the user receiving a notification
+        $dbHandler->runCommand("SELECT `Username` FROM `REGISTERED_USER` WHERE `UserID`=?",$userIDFrom);
+        $usernameFrom = $dbHandler->getResults();
+        if($Type == 1){
+            $description = $usernameFrom . " liked your post" ;
+        }else if($Type == 2){
+            $description = $usernameFrom . " commented on your post" ;
+        }else if($Type == 3){
+            $description = $usernameFrom . " has requested to follow You" ;
+        }
+
+        // Insert the notification into the database
+        $dbHandler->runCommand("INSERT INTO `NOTIFICATIONS` (`UserID`,`NotifierUserID`,`Type`,`TimeRecieved`,`DateRecieved`,`Description`)
+               VALUES (?,?,?,?,?,?)",$UserID,$userIDFrom,$Type,$t,$d,$description);
+        $res = $dbHandler->getResults();
+        if ($res != null) {
+
+            $notificationAdded = true;
+        }
+        return $notificationAdded;
+
+    }
     // the following functions need to then trigger a notification to the user about a comment/like from a particular user
     public static function likePost($userID, $postID)
     {
