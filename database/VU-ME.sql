@@ -79,7 +79,8 @@ CREATE TABLE `COMMENTS`(
 DROP TABLE IF EXISTS `NOTIFICATIONS` ;
 CREATE TABLE `NOTIFICATIONS`(
   `NotificationID` INTEGER NOT NULL AUTO_INCREMENT,
-  `UserID` INTEGER NOT NULL , /*This is the ID of the incoming users request*/
+  `UserID` INTEGER NOT NULL ,
+  `NotifyerUserID` INTEGER NOT NULL , /*This is the ID of the incoming users request*/
   `Type` TINYINT NOT NULL, /* (1 = like) , (2 = comment) , (3 = follow Request) */
   `TimeRecieved` DATETIME not null DEFAULT CURTIME(),
   `DateRecieved` DATETIME not null DEFAULT CURDATE(),
