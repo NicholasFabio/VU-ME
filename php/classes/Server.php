@@ -354,13 +354,43 @@ class Server
     public static function fetchNotifications(){}
     // based on the notification recieved by the user, the server can fetch the necessary information required
     public static function fetchFollowRequests(){}
-    public static function fetchLikes(){}
+
+    public static function fetchLikes($postID){
+        $countLikes = 0;
+        $dbHandler = self::fetchDatabaseHandler();
+        $dbHandler->runCommand("SELECT * FROM `LIKES` WHERE `PostID`=? ", $postID);
+        $res = $dbHandler->getResults();
+        if ($res != null) {
+            $countLikes = count($res);
+        }
+        return $countLikes;
+    }
     public static function fetchComments(){}
 
     // adding a notification based on a certain action performed by a particular user
     public static function addNotification(){}
     // the following functions need to then trigger a notification to the user about a comment/like from a particular user
-    public static function likePost(){}
+    public static function likePost($userID, $postID)
+    {
+        $postLiked = false;
+        $dbHandler = self::fetchDatabaseHandler();
+        $dbHandler->runCommand("INSERT INTO (`UserID`,`PostID`) VALUES (?,?)",$userID,$postID);
+        $res = $dbHandler->getResults();
+        if ($res != null) {
+            $postLiked = true;
+        }
+        return $postLiked;
+    }
+    public static function unLikePost($userID, $postID){
+        $postUnLiked = false ;
+        $dbHandler = self::fetchDatabaseHandler();
+        $dbHandler->runCommand("DELETE FROM `LIKES` WHERE `UserID` = ? AND `PostID` = ? ",$userID,$postID);
+        $res = $dbHandler->getResults();
+        if ($res != null) {
+            $postUnLiked = true;
+        }
+        return $postUnLiked;
+    }
     public static function commentOnPost(){}
 
 
