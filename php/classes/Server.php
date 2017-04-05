@@ -377,6 +377,7 @@ class Server
         $dbHandler->runCommand("INSERT INTO (`UserID`,`PostID`) VALUES (?,?)",$userID,$postID);
         $res = $dbHandler->getResults();
         if ($res != null) {
+
             $postLiked = true;
         }
         return $postLiked;
