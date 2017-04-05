@@ -54,6 +54,8 @@
                     </div>
                     <div class="top-bar-right">
                         <ul class="menu menu-desktop">
+                           <!-- <li><a href="#" onclick="sendAJAXRequest('get-time',handleFetchTime)">Time</a></li>
+                            <li><a href="#" onclick="sendAJAXRequest('get-date',handleFetchDate)">Date</a></li>-->
                             <li><a href="#" onclick="sendAJAXRequest('fetch-followers',handleFetchFollowers)"> Followers</a></li>
                             <li><a href="#" onclick="sendAJAXRequest('fetch-following',handleFetchFollowing)"> Following</a></li>
                             <li><a href="Explore.php"><img src="img/V-logo2.png" width="45" height="45" alt="Explore"></a></li>

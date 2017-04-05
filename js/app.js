@@ -226,18 +226,23 @@ function handleFetchUserDetials(response){
 function handleFetchUsers(response){
     $response = JSON.parse(response);
     console.log($response);
-    var t = document.getElementById("feeds-table");
+    var t = document.getElementById("Explore-users");
+    var uName = "" ;
     //t.innerHTML = "<tbody> <tr></tr>";
     for(var i = 0; i < $response.length; i++){
         var count = i ;
-
-        t.innerHTML +=  $response[i]["Username"] + "<br>" + "POST HERE" + "<hr width='50%'>" ;
-
+      uName = $response[i]["Username"] ;
+        t.innerHTML += $response[i]["Username"] + "<br>" + "POST HERE" + "<hr width='50%'>" ;
+        //t.addEventListener('click',followUser($response[i]["Username"]),false) ;
+        // "<a href='#' onclick='followUser(" + uName + ")'" + "/>"+
     }
     //t.innerHTML = "</tbody> ";
 
 }
-
+function followUser(UserNameToFollow){
+    var s = UserNameToFollow.toString();
+ console.log(s);
+}
 function handleFetchFollowers(response){
     var res = JSON.parse(response);
     console.log(res);
@@ -312,4 +317,15 @@ function getLocation() {
 function showPosition(position) {
     x.innerHTML = "Latitude: " + position.coords.latitude +
         "<br>Longitude: " + position.coords.longitude;
+}
+
+function handleFetchTime(response){
+    var res = JSON.parse(response);
+    console.log(res);
+}
+
+
+function handleFetchDate(response){
+    var res = JSON.parse(response);
+    console.log(res);
 }

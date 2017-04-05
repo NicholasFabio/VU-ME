@@ -68,11 +68,9 @@
             <section class="main-feeds">
                 <form>
                     <div class="feed-container">
-
-                        <div class="Explore-feeds">
+                        <div id="Explore-users">
 
                         </div>
-
                     </div>
 
 
@@ -118,7 +116,7 @@
 <script>
     sendAJAXRequest('validate-session',handleServerValidation);
     sendAJAXRequest('fetch-user-details', handleFetchUserDetials);
-    //sendAJAXRequest('fetch-users', handleFetchUsers);
+    sendAJAXRequest('fetch-users', handleFetchUsers);
 </script>
 
 

@@ -125,12 +125,29 @@ class Server
         }
     }
 
-    public static function fetchUsers(){
+    public static function fetchAllUsers($UserID){
+        // the user id passed to this function is the userID requesting to fetch all users
         $dbHandler = self::fetchDatabaseHandler();
-        $dbHandler->runCommand("SELECT * FROM REGISTERED_USER");
+        $dbHandler->runCommand("SELECT * FROM REGISTERED_USER WHERE `UserID` != ?",$UserID);
         $results = $dbHandler->getResults();
         if($results != null ){
             return $results ;
+        }else{
+            return false;
+        }
+    }
+
+    public static function fetchNonPrivateUsers($uID){
+        $all = self::fetchAllUsers($uID) ;
+        $result = [];
+        for($i = 0; i < count($all); $i++){
+            // only want to deal with non private so search for public (value being 0)
+            if ($all[$i]['Private'] == 0){
+                $result[$i] = $all[$i] ;
+            }
+        }
+        if($result != null ){
+            return $result ;
         }else{
             return false;
         }
@@ -157,7 +174,7 @@ class Server
     public static function fetchFollowing(){
         $uID = self::fetchSessionHandler()->getSessionVariable("UserID");
         $dbHandler = self::fetchDatabaseHandler();
-        $dbHandler->runCommand("SELECT * FROM `FOLLOWING` WHERE `UserID` = ? AND `Notify` =? AND `Notify`=? ",$uID,0,3);
+        $dbHandler->runCommand("SELECT * FROM `FOLLOWING` WHERE `UserID` = ? AND (`Notify` =? OR `Notify`=?) ",$uID,0,3);
         $results = $dbHandler->getResults();
         $FollowingValues = [];
         if($results != null ){
@@ -332,9 +349,6 @@ class Server
         }
     }
 
-
-
-
     //TODO complete the following functions
     // Fetch notifications should be done regularly, most probably timed or by page refresh
     public static function fetchNotifications(){}
@@ -348,6 +362,21 @@ class Server
     // the following functions need to then trigger a notification to the user about a comment/like from a particular user
     public static function likePost(){}
     public static function commentOnPost(){}
+
+
+    // helper functions to get current date and time
+    public static function getCurrentTime(){
+        $db = self::fetchDatabaseHandler();
+        $db->runCommand("SELECT CURTIME()") ;
+        $res = $db->getResults();
+        return $res ;
+    }
+    public static function getCurrentDate(){
+        $db = self::fetchDatabaseHandler();
+        $db->runCommand("SELECT CURDATE()") ;
+        $res = $db->getResults();
+        return $res ;
+    }
 
 }
 
@@ -391,7 +420,9 @@ if (!empty($_POST)) {
                 break;
 
             case 'fetch-users':
-                $response = json_encode(Server::fetchUsers());
+                //TODO pass actual user ID to server
+                // 1 being for myself for now
+                $response = json_encode(Server::fetchAllUsers(1));
                 break;
 
             case 'fetch-followers':
@@ -450,6 +481,14 @@ if (!empty($_POST)) {
                 break;
 
             case 'searchRegion':
+                break;
+
+            case 'get-time':
+                $response = json_encode(Server::getCurrentTime());
+                break;
+
+            case 'get-date':
+                $response = json_encode(Server::getCurrentDate());
                 break;
 
             default:

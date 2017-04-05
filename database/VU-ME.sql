@@ -50,7 +50,8 @@ CREATE TABLE `POST`(
   `Source` varchar(100),
   `Visibility` TINYINT not null , /* 1 = to followers only, 0 = Public*/
   `TimeViewable` INTEGER not null,
-  `TimePosted` TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+  `TimePosted` DATETIME not null DEFAULT CURTIME(),
+  `DatePosted` DATETIME not null DEFAULT CURDATE(),
   PRIMARY KEY (`PostID`),
   FOREIGN KEY (`UserID`) REFERENCES REGISTERED_USER(`UserID`)
 );
@@ -76,9 +77,9 @@ CREATE TABLE `COMMENTS`(
 DROP TABLE IF EXISTS `NOTIFICATIONS` ;
 CREATE TABLE `NOTIFICATIONS`(
   `NotificationID` INTEGER NOT NULL,
-  `UserID` INTEGER NOT NULL ,
+  `UserID` INTEGER NOT NULL , /*This is the ID of the incoming users request*/
   `Type` TINYINT NOT NULL, /* (1 = like) , (2 = comment) , (3 = follow Request) */
-  `TimeRecieved` TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+  `TimeRecieved` DATETIME not null DEFAULT NOW(),
   `Description` VARCHAR(225) NOT NULL ,
   FOREIGN KEY (`UserID`)REFERENCES REGISTERED_USER(`UserID`),
   PRIMARY KEY (`NotificationID`)
@@ -88,7 +89,8 @@ CREATE TABLE `NOTIFICATIONS`(
 INSERT INTO `REGISTERED_USER` (`UserID`,`Username`,`Name`, `Surname`,`Gender`,`Email`,`ContactNumber`,`Password`, `UserType`,`ProfilePicture`,`Private`) VALUES
   (1, 'nick', 'Nicholas', 'Rader',1, 'nick@email.co.za', '0834605522', '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW',3,'img/users/def.jpg',0),
   (2, 'byzo', 'Byron', 'Mills',1, 'byron@email.co.za', '0824569612', '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW',1,'img/users/def.jpg',0),
-  (3, 'jords', 'Jordan', 'Van Vuuren',1, 'jordan@email.co.za', '0845621274', '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW',1,'img/users/def.jpg',0);
+  (3, 'jords', 'Jordan', 'Van Vuuren',1, 'jordan@email.co.za', '0845621274', '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW',1,'img/users/def.jpg',0),
+  (4, 'Noob', 'Jhon', 'Doe',1, 'jhond@email.co.za', '0845621274', '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW',1,'img/users/def.jpg',0);
 
 INSERT INTO `FOLLOWERS` (`UserID`,`FollowedByUserID`) VALUES
   (1,2),
@@ -102,8 +104,8 @@ INSERT INTO `FOLLOWING` (`UserID`,`FollowingUserID`,`Notify`) VALUES
   (1,2,0),
   (1,3,0);
 
-INSERT INTO `POST` (`PostID`,`UserID`,`Text`,`Source`,`Visibility`,`TimeViewable`,`TimePosted`) VALUES
-  (1,1,'User 1s first post','',0,'6', '2017-03-06 17:21:29'),
-  (2,2,'User 2s first post','',0,'6', '2017-03-06 18:21:29'),
-  (3,2,'User 2s second post','',1,'6', '2017-03-06 19:21:29'),
-  (4,3,'User 3s first post','',0,'6', '2017-03-06 20:21:29');
+INSERT INTO `POST` (`PostID`,`UserID`,`Text`,`Source`,`Visibility`,`TimeViewable`,`TimePosted`,`DatePosted`) VALUES
+  (1,1,'User 1s first post','',0,'6','17:21:29', '2017-03-06'),
+  (2,2,'User 2s first post','',0,'6','18:21:29', '2017-03-06'),
+  (3,2,'User 2s second post','',1,'6','19:21:29', '2017-03-06'),
+  (4,3,'User 3s first post','',0,'6', '20:21:29', '2017-03-06');
