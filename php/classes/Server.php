@@ -444,13 +444,28 @@ class Server
     }
 
 
-    public static function commentOnPost($userID, $postID, $comment){
-
+    public static function commentOnPost($postID, $userID, $comment){
+        $dbhandler = self::fetchDatabaseHandler();
+        $dbhandler->runCommand("INSERT INTO `COMMENTS` (`PostID`,`UserID`,`CommentMessage`) VALUES (?,?,?)",$postID,$userID,$comment);
+        $res = $dbhandler->getResults();
+        if($res!=null){
+            return res;
+        }else{
+            return false;
+        }
     }
     // Removing a comment can only be done by the user whos post it is, or the user who commented on the post
     // The validation for this removal can be done via front end.
-    public static function RemoveComment($userID, $postID){
+    public static function RemoveComment($postID,$userID){
+        $isRemoved = false ;
+        $dbhandler = self::fetchDatabaseHandler();
+        $dbhandler->runCommand("DELETE FROM `COMMENTS` WHERE `PostID` = ? AND  `UserID` = ?",$postID,$userID);
+        $res = $dbhandler->getResults();
+        if($res!=null){
+           $isRemoved = true;
+        }
 
+        return $isRemoved;
     }
 
 
