@@ -467,7 +467,16 @@ class Server
 
         return $isRemoved;
     }
-
+    public static function EditComment($postID,$userID,$newComment){
+        $isEdited = false ;
+        $dbhandler = self::fetchDatabaseHandler();
+        $dbhandler->runCommand("UPDATE `COMMENTS` SET `CommentMessage`=? WHERE `PostID` = ? AND `UserID` = ? " ,$newComment,$postID,$userID);
+        $res = $dbhandler->getResults();
+        if($res!=null){
+            $isEdited = true;
+        }
+        return $isEdited;
+    }
 
     public static function removePost(){}
     public static function editPost(){}
