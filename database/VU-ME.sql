@@ -59,17 +59,19 @@ CREATE TABLE `POST`(
 
 DROP TABLE IF EXISTS `LIKES` ;
 CREATE TABLE `LIKES`(
-  `UserID` integer not null,
+  `LikeID` integer not null auto_increment,
+  `UserID` integer not null, /* The ID of the user who likes the post */
   `PostID` integer not null,
   FOREIGN KEY (`UserID`) REFERENCES REGISTERED_USER(`UserID`),
-  FOREIGN KEY (`PostID`) REFERENCES POST(`PostID`)
+  FOREIGN KEY (`PostID`) REFERENCES POST(`PostID`),
+  PRIMARY KEY (`LikeID`)
 );
 
 DROP TABLE IF EXISTS `COMMENTS` ;
 CREATE TABLE `COMMENTS`(
   `CommentID` integer not null auto_increment,
   `PostID` integer not null,
-  `UserID` integer not null, /* The ID of the user who comments */
+  `UserID` integer not null, /* The ID of the user who comments on the post */
   `CommentMessage` VARCHAR(300),
   FOREIGN KEY (`PostID`) REFERENCES POST(`PostID`),
   FOREIGN KEY (`UserID`) REFERENCES REGISTERED_USER(`UserID`),
@@ -79,13 +81,14 @@ CREATE TABLE `COMMENTS`(
 DROP TABLE IF EXISTS `NOTIFICATIONS` ;
 CREATE TABLE `NOTIFICATIONS`(
   `NotificationID` INTEGER NOT NULL AUTO_INCREMENT,
-  `UserID` INTEGER NOT NULL ,
-  `NotifierUserID` INTEGER NOT NULL , /*This is the ID of the incoming users request*/
+  `UserID` INTEGER NOT NULL , /* ID of User recieving notifications*/
+  `NotifierUserID` INTEGER NOT NULL , /*This is the ID of the user triggering a notification to another user*/
   `Type` TINYINT NOT NULL, /* (1 = like) , (2 = comment) , (3 = follow Request) */
   `TimeRecieved` DATETIME not null DEFAULT CURTIME(),
   `DateRecieved` DATETIME not null DEFAULT CURDATE(),
   `Description` VARCHAR(225) NOT NULL ,
   FOREIGN KEY (`UserID`)REFERENCES REGISTERED_USER(`UserID`),
+  FOREIGN KEY (`NotifierUserID`)REFERENCES REGISTERED_USER(`UserID`),
   PRIMARY KEY (`NotificationID`)
 );
 

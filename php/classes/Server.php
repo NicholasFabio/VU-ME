@@ -103,13 +103,24 @@ class Server
 
     public static function registerUser(array $details):bool{
         $isSuccess = false ;
-        $name = $details[0];
-        $surname = $details[1];
-        $username = $details[2];
-        $email = $details[3];
-        $gender = $details[4];
+        $username = $details[0];
+        $name = $details[1];
+        $surname = $details[2];
+        $gender = $details[3];
+        $email = $details[4];
         $contactNumber = $details[5];
         $password = self::hashPassword($details[6]) ;
+        $userType = 1;
+        $profilePicture = $details[7];
+        $private = $details[8]; // 0=public 1=private
+
+        $dbhandler = self::fetchDatabaseHandler();
+        $dbhandler->runCommand("INSERT INTO `REGISTERED_USER` (`Username`,`Name` ,`Surname`, `Gender`,`Email` ,`ContactNumber`,`Password`,`UserType`,`ProfilePicture`,`Private`)
+                VALUES (?,?,?,?,?,?,?,?,?,?)",$username,$name,$surname,$gender,$email,$contactNumber,$password,$userType,$profilePicture,$private);
+        $res = $dbhandler->getResults();
+        if($res != null){
+            $isSuccess = true;
+        }
         return $isSuccess;
     }
 
@@ -151,6 +162,23 @@ class Server
         }else{
             return false;
         }
+    }
+    // This function checks wheter or not a users profile is private
+    public static function ValidatePrivateProfile($userID):bool{
+        $isPrivate = false ;
+        $dbHandler = self::fetchDatabaseHandler();
+        $dbHandler->runCommand("SELECT `Private` FROM `REGISTERED_USER` WHERE `UserID` = ?" ,$userID);
+        $result = $dbHandler->getResults();
+        if($result!= null){
+            if($result == 1){
+                // 1 means its a private profile (not for public to see)
+                $isPrivate = true ;
+            }else{
+                // anything other than 1 is non-private (should be 0)
+                $isPrivate = false ;
+            }
+        }
+        return $isPrivate;
     }
 
     public static function fetchFollowers(){
@@ -231,23 +259,6 @@ class Server
 
     }
 
-    // This function checks wheter or not a users profile is private
-    public static function ValidatePrivateProfile($userID):bool{
-        $isPrivate = false ;
-        $dbHandler = self::fetchDatabaseHandler();
-        $dbHandler->runCommand("SELECT `Private` FROM `REGISTERED_USER` WHERE `UserID` = ?" ,$userID);
-        $result = $dbHandler->getResults();
-        if($result!= null){
-            if($result == 1){
-                // 1 means its a private profile (not for public to see)
-                $isPrivate = true ;
-            }else{
-                // anything other than 1 is non-private (should be 0)
-                $isPrivate = false ;
-            }
-        }
-        return $isPrivate;
-    }
 
     //TODO perform validation on user if following or not when the user clicks on the user they want to follows profile instead of on the follow button click
     public static function followUser($UserToFollowUsername,$userID): bool{
@@ -299,7 +310,6 @@ class Server
         }
 
     }
-
     //TODO perform validation on user if following or not when the user clicks on the user they want to follows profile instead of on the un-follow button click
     public static function unfollowUser($UserToUnfollowUsername, $userID):bool{
         $isFollowed = false;
@@ -349,12 +359,9 @@ class Server
         }
     }
 
-    //TODO complete the following functions
-    // Fetch notifications should be done regularly, most probably timed or by page refresh
-    public static function fetchNotifications(){}
-    // based on the notification recieved by the user, the server can fetch the necessary information required
-    public static function fetchFollowRequests(){}
 
+    // based on the notification recieved by the user, the server can fetch the necessary information required
+    public static function fetchFollowRequests($userID){}
     public static function fetchLikes($postID){
         $countLikes = 0;
         $dbHandler = self::fetchDatabaseHandler();
@@ -365,10 +372,23 @@ class Server
         }
         return $countLikes;
     }
-    public static function fetchComments(){}
+    public static function fetchComments($postID){}
 
-    // adding a notification based on a certain action performed by a particular user
     //TODO Handle the notifcation and allow reactions based on receiving a notification
+    // Fetch notifications should be done regularly, most probably timed or by page refresh
+    public static function fetchNotifications($UserID){
+
+        $dbHandler = self::fetchDatabaseHandler();
+        $dbHandler->runCommand("SELECT * FROM `NOTIFICATIONS` WHERE `UserID`=?",$UserID);
+        $res = $dbHandler->getResults();
+        if($res != null){
+            return res;
+        }else{
+            return false ;
+        }
+
+    }
+    // adding a notification based on a certain action performed by a particular user
     public static function addNotification($Type, $userIDFrom,$UserID){
         $dbHandler = self::fetchDatabaseHandler();
         $t = self::getCurrentTime();
@@ -377,7 +397,7 @@ class Server
         $usernameFrom = "";
         $description = "" ;
 
-        // get the username of user whos name is to be seen by the user receiving a notification
+        // get the username of user who's triggering a notification to another user
         $dbHandler->runCommand("SELECT `Username` FROM `REGISTERED_USER` WHERE `UserID`=?",$userIDFrom);
         $usernameFrom = $dbHandler->getResults();
         if($Type == 1){
@@ -399,15 +419,15 @@ class Server
         return $notificationAdded;
 
     }
+
     // the following functions need to then trigger a notification to the user about a comment/like from a particular user
     public static function likePost($userID, $postID)
     {
         $postLiked = false;
         $dbHandler = self::fetchDatabaseHandler();
-        $dbHandler->runCommand("INSERT INTO (`UserID`,`PostID`) VALUES (?,?)",$userID,$postID);
+        $dbHandler->runCommand("INSERT INTO `LIKES`(`UserID`,`PostID`) VALUES (?,?)",$userID,$postID);
         $res = $dbHandler->getResults();
         if ($res != null) {
-
             $postLiked = true;
         }
         return $postLiked;
@@ -422,7 +442,20 @@ class Server
         }
         return $postUnLiked;
     }
-    public static function commentOnPost(){}
+
+
+    public static function commentOnPost($userID, $postID, $comment){
+
+    }
+    // Removing a comment can only be done by the user whos post it is, or the user who commented on the post
+    // The validation for this removal can be done via front end.
+    public static function RemoveComment($userID, $postID){
+
+    }
+
+
+    public static function removePost(){}
+    public static function editPost(){}
 
 
     // helper functions to get current date and time
