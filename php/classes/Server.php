@@ -103,19 +103,19 @@ class Server
 
     public static function registerUser(array $details):bool{
         $isSuccess = false ;
+
         $username = $details[0];
         $name = $details[1];
         $surname = $details[2];
-        $gender = $details[3];
-        $email = $details[4];
-        $contactNumber = $details[5];
-        $password = self::hashPassword($details[6]) ;
+        $email = $details[3];
+        $contactNumber = $details[4];
+        $password = self::hashPassword($details[5]) ;
         $userType = 1;
-        $profilePicture = $details[7];
-        $private = $details[8]; // 0=public 1=private
+        $profilePicture = $details[6];
+        $private = $details[7]; // 0=public 1=private
 
         $dbhandler = self::fetchDatabaseHandler();
-        $dbhandler->runCommand("INSERT INTO `REGISTERED_USER` (`Username`,`Name` ,`Surname`, `Gender`,`Email` ,`ContactNumber`,`Password`,`UserType`,`ProfilePicture`,`Private`)
+        $dbhandler->runCommand("INSERT INTO `REGISTERED_USER` (`Username`,`Name` ,`Surname`, `Email` ,`ContactNumber`,`Password`,`UserType`,`ProfilePicture`,`Private`)
                 VALUES (?,?,?,?,?,?,?,?,?,?)",$username,$name,$surname,$gender,$email,$contactNumber,$password,$userType,$profilePicture,$private);
         $res = $dbhandler->getResults();
         if($res != null){
@@ -502,9 +502,10 @@ class Server
 if (!empty($_POST)) {
     Server::startServer();
 
-    $response = "" ;
+    $response = "" ; // this is what will be rerturned to the device that is waiting on a response from the server
+
     if (isset($_POST['action'])) {
-        // Get the action that was provided for server to interpret
+        // The action/command that was provided for server to interpret
         $action = $_POST['action'];
 
         // Based on the action provided the server will interact appropriately
@@ -530,7 +531,18 @@ if (!empty($_POST)) {
                 break;
 
             case 'register':
-
+                 if (isset($_POST['user-Name']) && isset($_POST['user-Surname']) && isset($_POST['user-Username'])  && isset($_POST['user-Email']) && isset($_POST['user-MobileNumber']) && isset($_POST['user-Pass'])
+                    && isset($_POST['user-ProfilePic']) && isset($_POST['user-Private'])){
+                        $details[0] = $_POST['user-Username'];
+                        $details[1] = $_POST['user-Name'];
+                        $details[2] = $_POST['user-Surname'] ; 
+                        $details[3] = $_POST['user-Email'];
+                        $details[4] = $_POST['user-MobileNumber'];
+                        $details[5] = self::hashPassword( $_POST['user-Pass']) ;
+                        $details[6] = $_POST['user-ProfilePic'];
+                        $details[7] = $_POST['user-Private'];
+                    $response = json_encode(Server::register($details)) ;
+                 }
                 break;
 
             case 'fetch-user-details':

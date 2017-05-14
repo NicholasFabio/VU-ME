@@ -8,7 +8,6 @@ CREATE TABLE `REGISTERED_USER`(
   `Username` varchar(40) not null UNIQUE,
   `Name` varchar(40) not null,
   `Surname` varchar(40) not null,
-  `Gender` tinyint not null,     /*1 = Male, 0 = Female */
   `Email` varchar(40) not null UNIQUE,
   `ContactNumber` varchar(15) not null,
   `Password` varchar(255) not null,
@@ -83,7 +82,7 @@ CREATE TABLE `NOTIFICATIONS`(
   `NotificationID` INTEGER NOT NULL AUTO_INCREMENT,
   `UserID` INTEGER NOT NULL , /* ID of User recieving notifications*/
   `NotifierUserID` INTEGER NOT NULL , /*This is the ID of the user triggering a notification to another user*/
-  `Type` TINYINT NOT NULL, /* (1 = like) , (2 = comment) , (3 = follow Request) */
+  `Type` TINYINT NOT NULL, /* (1 = like) , (2 = comment) , (3 = follow) (4= follow Request) */
   `TimeRecieved` DATETIME not null DEFAULT CURTIME(),
   `DateRecieved` DATETIME not null DEFAULT CURDATE(),
   `Description` VARCHAR(225) NOT NULL ,
@@ -93,11 +92,11 @@ CREATE TABLE `NOTIFICATIONS`(
 );
 
 
-INSERT INTO `REGISTERED_USER` (`UserID`,`Username`,`Name`, `Surname`,`Gender`,`Email`,`ContactNumber`,`Password`, `UserType`,`ProfilePicture`,`Private`) VALUES
-  (1, 'nick', 'Nicholas', 'Rader',1, 'nick@email.co.za', '0834605522', '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW',3,'img/users/def.jpg',0),
-  (2, 'byzo', 'Byron', 'Mills',1, 'byron@email.co.za', '0824569612', '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW',1,'img/users/def.jpg',0),
-  (3, 'jords', 'Jordan', 'Van Vuuren',1, 'jordan@email.co.za', '0845621274', '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW',1,'img/users/def.jpg',0),
-  (4, 'Noob', 'Jhon', 'Doe',1, 'jhond@email.co.za', '0845621274', '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW',1,'img/users/def.jpg',0);
+INSERT INTO `REGISTERED_USER` (`UserID`,`Username`,`Name`, `Surname`,`Email`,`ContactNumber`,`Password`, `UserType`,`ProfilePicture`,`Private`) VALUES
+  (1, 'nick', 'Nicholas', 'Rader', 'nick@email.co.za', '0834605522', '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW',3,'img/users/def.jpg',0),
+  (2, 'byzo', 'Byron', 'Mills', 'byron@email.co.za', '0824569612', '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW',1,'img/users/def.jpg',0),
+  (3, 'jords', 'Jordan', 'Van Vuuren', 'jordan@email.co.za', '0845621274', '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW',1,'img/users/def.jpg',0),
+  (4, 'Noob', 'Jhon', 'Doe', 'jhond@email.co.za', '0845621274', '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW',1,'img/users/def.jpg',0);
 
 INSERT INTO `FOLLOWERS` (`UserID`,`FollowedByUserID`) VALUES
   (1,2),
