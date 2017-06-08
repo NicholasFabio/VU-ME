@@ -48,7 +48,7 @@ class Server
                 $sessionHandler = self::fetchSessionHandler();
 
                 // run commands to DB to verify the user is registered
-                $dbHandler->runCommand("SELECT `Password`,`UserID`,`Name`,`Username`,`UserType` FROM REGISTERED_USER WHERE `Username` = ?", $username);
+                $dbHandler->runCommand("SELECT `Password`,`UserID`,`Name`,`Username`,`UserType` FROM REGISTERED_USER WHERE `Email` = ?", $username);
                 // gather results from the DB if the results are present
                 $result = $dbHandler->getResults();
                     if(count($result)==1 && password_verify($password, $result[0]['Password'])){
@@ -94,7 +94,6 @@ class Server
     }
 
     public static function createAndResetDatabase():bool {
-        //$dbHandler = new DatabaseHandler("eu-cdbr-azure-west-d.cloudapp.net","bb5f5a5205e9c5","74c8233a","");
         $dbHandler = new DatabaseHandler("localhost","root","Sebenza","");
         $success = $dbHandler->executeSQLScriptFile("database/VU-ME.sql");
         self::fetchSessionHandler()->setSessionVariable("dbHandler", $dbHandler);
@@ -109,16 +108,14 @@ class Server
         $surname = $details[2];
         $email = $details[3];
         $contactNumber = $details[4];
-        $password = self::hashPassword($details[5]) ;
+        $password = $details[5] ;
         $userType = 1;
-        $profilePicture = $details[6];
-        $private = $details[7]; // 0=public 1=private
+        $profilePicture="img/users/def.jpg";
+        $private = 0;
 
         $dbhandler = self::fetchDatabaseHandler();
-        $dbhandler->runCommand("INSERT INTO `REGISTERED_USER` (`Username`,`Name` ,`Surname`, `Email` ,`ContactNumber`,`Password`,`UserType`,`ProfilePicture`,`Private`)
-                VALUES (?,?,?,?,?,?,?,?,?,?)",$username,$name,$surname,$gender,$email,$contactNumber,$password,$userType,$profilePicture,$private);
-        $res = $dbhandler->getResults();
-        if($res != null){
+        if($dbhandler->runCommand("INSERT INTO `REGISTERED_USER` (`Username`,`Name` ,`Surname`, `Email` ,`ContactNumber`,`Password`,`UserType`,`ProfilePicture`,`Private`)
+                VALUES (?,?,?,?,?,?,?,?,?)",$username,$name,$surname,$email,$contactNumber,$password,$userType,$profilePicture,$private)){
             $isSuccess = true;
         }
         return $isSuccess;
@@ -218,11 +215,10 @@ class Server
     }
 
     // This function fetchs all posts that a User is following
-    public static function fetchFollowingPosts(){
+    public static function fetchFollowingPosts($userID){
 
-        $uID = self::fetchSessionHandler()->getSessionVariable("UserID");
         $dbHandler = self::fetchDatabaseHandler();
-        $dbHandler->runCommand("SELECT * FROM `FOLLOWING` WHERE `UserID` = ?",$uID);
+        $dbHandler->runCommand("SELECT * FROM `FOLLOWING` WHERE `UserID` = ?",$userID);
         $results = $dbHandler->getResults();
         $FollowingValues = null;
         $count = 0;
@@ -239,6 +235,15 @@ class Server
                     // loop through each post by the followed user
                    for($j = 0; $j < count($FollowingValues); $j++) {
                        $count++ ;
+                        $dbHandler->runCommand("SELECT `Username` FROM `REGISTERED_USER` WHERE `UserID` = ?",$FollowingValues[$j]['UserID']);
+                        $uName = $dbHandler->getResults();
+                                                
+                        $dbHandler->runCommand("SELECT COUNT(*) FROM `LIKES` WHERE `PostID` = ?",$FollowingValues[$j]['PostID']);
+                        $likes = $dbHandler->getResults();
+                       
+                        $returnValue[$count]['Likes'] = $likes;
+
+                    $returnValue[$count]['Username'] = $uName;
                        $returnValue[$count]['PostID'] = $FollowingValues[$j]['PostID'];
                        $returnValue[$count]['UserID'] = $FollowingValues[$j]['UserID'];
                        $returnValue[$count]['Text'] = $FollowingValues[$j]['Text'];
@@ -246,7 +251,6 @@ class Server
                        $returnValue[$count]['Visibility'] = $FollowingValues[$j]['Visibility'];
                        $returnValue[$count]['TimeViewable'] = $FollowingValues[$j]['TimeViewable'];
                        $returnValue[$count]['TimePosted'] = $FollowingValues[$j]['TimePosted'];
-
                    }
                 }
 
@@ -531,17 +535,17 @@ if (!empty($_POST)) {
                 break;
 
             case 'register':
-                 if (isset($_POST['user-Name']) && isset($_POST['user-Surname']) && isset($_POST['user-Username'])  && isset($_POST['user-Email']) && isset($_POST['user-MobileNumber']) && isset($_POST['user-Pass'])
-                    && isset($_POST['user-ProfilePic']) && isset($_POST['user-Private'])){
-                        $details[0] = $_POST['user-Username'];
-                        $details[1] = $_POST['user-Name'];
-                        $details[2] = $_POST['user-Surname'] ; 
-                        $details[3] = $_POST['user-Email'];
-                        $details[4] = $_POST['user-MobileNumber'];
-                        $details[5] = self::hashPassword( $_POST['user-Pass']) ;
-                        $details[6] = $_POST['user-ProfilePic'];
-                        $details[7] = $_POST['user-Private'];
-                    $response = json_encode(Server::register($details)) ;
+                 if (isset($_POST['name']) && isset($_POST['surname']) && isset($_POST['username'])  && isset($_POST['email']) && isset($_POST['mobileNumber']) && isset($_POST['password'])){
+                       //&& isset($_POST['user-ProfilePic']) && isset($_POST['user-Private'])
+                        $details[0] = $_POST['username'];
+                        $details[1] = $_POST['name'];
+                        $details[2] = $_POST['surname'] ;
+                        $details[3] = $_POST['email'];
+                        $details[4] = $_POST['mobileNumber'];
+                        $details[5] = Server::hashPassword($_POST['password']);
+                     $response = json_encode(Server::registerUser($details)) ;
+                 }else{
+                     $response = json_encode(false) ;
                  }
                 break;
 
@@ -574,10 +578,8 @@ if (!empty($_POST)) {
                  break;
 
             case 'fetch-following-posts':
-                $OK = Server::serverSecurityValidation();
-                    if($OK){
-                        $response = json_encode(Server::fetchFollowingPosts());
-
+                    if(isset($_POST['UserID'])){
+                        $response = json_encode(Server::fetchFollowingPosts($_POST['UserID']));
                     }else{
                         $response = json_encode(false);
                     }
@@ -585,7 +587,7 @@ if (!empty($_POST)) {
 
             case 'updateLocation':
                 if(isset($_POST['UserID']) && isset($_POST['Latitude']) && isset($_POST['Longitude'])) {
-                    $response = Server::unfollowUser($_POST['UserID'],$_POST['Latitude'],$_POST['Longitude']);
+                    $response = Server::updateUserLocation($_POST['UserID'],$_POST['Latitude'],$_POST['Longitude']);
                 }else{
                     $response = "Post variables not set";
                 }

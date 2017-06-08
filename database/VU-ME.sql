@@ -49,8 +49,8 @@ CREATE TABLE `POST`(
   `Source` varchar(100),
   `Visibility` TINYINT not null , /* 1 = to followers only, 0 = Public*/
   `TimeViewable` INTEGER not null,
-  `TimePosted` DATETIME not null DEFAULT CURTIME(),
-  `DatePosted` DATETIME not null DEFAULT CURDATE(),
+  `TimePosted` TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+  `DatePosted` TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
   `Flag` TINYINT not null DEFAULT 0, /* (0 = not reported)(1=Reviewing)(2 = flagged)(determined by multiple occurences) (3 = removal) */
   PRIMARY KEY (`PostID`),
   FOREIGN KEY (`UserID`) REFERENCES REGISTERED_USER(`UserID`)
@@ -83,8 +83,8 @@ CREATE TABLE `NOTIFICATIONS`(
   `UserID` INTEGER NOT NULL , /* ID of User recieving notifications*/
   `NotifierUserID` INTEGER NOT NULL , /*This is the ID of the user triggering a notification to another user*/
   `Type` TINYINT NOT NULL, /* (1 = like) , (2 = comment) , (3 = follow) (4= follow Request) */
-  `TimeRecieved` DATETIME not null DEFAULT CURTIME(),
-  `DateRecieved` DATETIME not null DEFAULT CURDATE(),
+  `TimeRecieved` DATETIME not null DEFAULT CURRENT_TIMESTAMP,
+  `DateRecieved` DATETIME not null DEFAULT CURRENT_TIMESTAMP,
   `Description` VARCHAR(225) NOT NULL ,
   FOREIGN KEY (`UserID`)REFERENCES REGISTERED_USER(`UserID`),
   FOREIGN KEY (`NotifierUserID`)REFERENCES REGISTERED_USER(`UserID`),
@@ -111,7 +111,7 @@ INSERT INTO `FOLLOWING` (`UserID`,`FollowingUserID`,`Notify`) VALUES
   (1,3,0);
 
 INSERT INTO `POST` (`PostID`,`UserID`,`Text`,`Source`,`Visibility`,`TimeViewable`,`TimePosted`,`DatePosted`,`Flag`) VALUES
-  (1,1,'User 1s first post','',0,'6','17:21:29', '2017-03-06','0'),
-  (2,2,'User 2s first post','',0,'6','18:21:29', '2017-03-06','0'),
-  (3,2,'User 2s second post','',1,'6','19:21:29', '2017-03-06','0'),
-  (4,3,'User 3s first post','',0,'6', '20:21:29', '2017-03-06','0');
+  (1,1,'User 1s first post','img/posts/flying.jpg',0,'6','17:21:29', '2017-03-06','0'),
+  (2,2,'User 2s first post','img/posts/flying.jpg',0,'6','18:21:29', '2017-03-06','0'),
+  (3,2,'User 2s second post','img/posts/flying.jpg',1,'6','19:21:29', '2017-03-06','0'),
+  (4,3,'User 3s first post','img/posts/flying.jpg',0,'6', '20:21:29', '2017-03-06','0');
