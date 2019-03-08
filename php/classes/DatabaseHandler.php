@@ -4,7 +4,6 @@
  * User: Nicholas
  * Date: 2017/02/22
  * Time: 07:51 PM
- * Author: Richard Faul
  * References: php.net/manual & stackexchange
  */
 
